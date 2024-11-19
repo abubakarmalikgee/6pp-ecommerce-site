@@ -1,9 +1,9 @@
-const ErrorHandler = require("../utils/errorHandler");
-const catchAsyncErrors = require("./catchAsyncErrors");
-const User = require("../models/userModels");
-const jwt = require("jsonwebtoken");
+import ErrorHandler from "../utils/errorHandler.js";
+import catchAsyncErrors from "./catchAsyncErrors.js";
+import User from "../models/userModels.js";
+import jwt from "jsonwebtoken";
 
-exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
+export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
@@ -17,7 +17,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   next();
 });
 
-exports.authorizeRoles = (...roles) => {
+export const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(

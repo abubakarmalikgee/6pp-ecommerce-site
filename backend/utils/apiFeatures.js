@@ -1,50 +1,50 @@
 class ApiFeatures {
-    constructor(query, queryStr){
-        this.query = query;
-        this.queryStr = queryStr;
-    }
+  constructor(query, queryStr) {
+    this.query = query;
+    this.queryStr = queryStr;
+  }
 
-    search(){
-        const keyword = this.queryStr.keyword ? {
-            name:{
-                $regex:this.queryStr.keyword,
-                $options:"i",
-            }
-        } : {};
-        
-        this.query = this.query.find({...keyword});
-       
-        return this;
-    }
+  search() {
+    const keyword = this.queryStr.keyword
+      ? {
+          name: {
+            $regex: this.queryStr.keyword,
+            $options: "i",
+          },
+        }
+      : {};
 
-    filter(){
-        const queryCopy = {...this.queryStr};
+    this.query = this.query.find({ ...keyword });
 
-        // Removing some fields for category
-        const removedFields = ["keyword","page","limit"];
+    return this;
+  }
 
-        removedFields.forEach(key => delete queryCopy[key]);
+  filter() {
+    const queryCopy = { ...this.queryStr };
 
-        // Filter for Price and Rating
-        let queryStr = JSON.stringify(queryCopy);
-        queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g,key => `$${key}`);
-        
-        this.query = this.query.find(JSON.parse(queryStr));
-        
-        return this;  
-    }
+    // Removing some fields for category
+    const removedFields = ["keyword", "page", "limit"];
 
-    pagination(resultPerPage){
+    removedFields.forEach((key) => delete queryCopy[key]);
 
-        const currentPage = Number(this.queryStr.page) || 1;
+    // Filter for Price and Rating
+    let queryStr = JSON.stringify(queryCopy);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
 
-        const skipItems = resultPerPage * (currentPage - 1);
+    this.query = this.query.find(JSON.parse(queryStr));
 
-        this.query = this.query.skip(skipItems).limit(resultPerPage);
+    return this;
+  }
 
-        return this;
-    }
+  pagination(resultPerPage) {
+    const currentPage = Number(this.queryStr.page) || 1;
+
+    const skipItems = resultPerPage * (currentPage - 1);
+
+    this.query = this.query.skip(skipItems).limit(resultPerPage);
+
+    return this;
+  }
 }
 
-
-module.exports = ApiFeatures;
+export default ApiFeatures;

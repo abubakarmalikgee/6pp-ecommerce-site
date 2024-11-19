@@ -1,4 +1,4 @@
-const {
+import {
   registerUser,
   loginUser,
   logout,
@@ -11,9 +11,9 @@ const {
   getAllUsers,
   updateUserRole,
   DeleteUser,
-} = require("../controllers/userController");
-const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
-const express = require("express");
+} from "../controllers/userController.js";
+import { isAuthenticatedUser, authorizeRoles } from "../middleware/auth.js";
+import express from "express";
 
 const router = express.Router();
 
@@ -43,4 +43,4 @@ router
   .put(isAuthenticatedUser, authorizeRoles("admin"), updateUserRole)
   .delete(isAuthenticatedUser, authorizeRoles("admin"), DeleteUser);
 
-module.exports = router;
+export default router;
